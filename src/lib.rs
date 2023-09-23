@@ -1,3 +1,5 @@
+mod ecdsa;
+
 use num_bigint::BigUint;
 
 #[derive(PartialEq, Debug, Clone)]
@@ -161,6 +163,24 @@ impl FiniteField {
         let d_inv = FiniteField::inv_multiplication(d, p);
 
         FiniteField::mult(c, &d_inv, p)
+    }
+
+    ///
+    /// Finds the multiplicative inverse of an element in the set if p is a
+    /// prime number using Fermat's Little Theorem:
+    ///
+    /// `a^(-1) mod p = a^(p-2) mod p`
+    ///
+    /// Such that:
+    /// `a * a^(-1) = 1 mod p`
+    ///
+    pub fn inv_mult_prime(a: &BigUint, p: &BigUint) -> BigUint {
+        assert!(
+            a < p,
+            //format!("c: {} must be less than or equal p: {}", c, p);
+        );
+
+        a.modpow(&(p - BigUint::from(2u32)), p)
     }
 }
 
